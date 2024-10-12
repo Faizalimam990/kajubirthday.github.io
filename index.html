@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decorated Strawberry Cake</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden; /* Prevent scrollbars */
+      position: relative; /* Allow absolute positioning for child elements */
+    }
+
+    /* Background video styles */
+    .bg-video {
+      position: absolute;
+      top: 0; /* Start from the top */
+      left: 0; /* Start from the left */
+      width: 100vw; /* Full viewport width */
+      height: 100vh; /* Full viewport height */
+      object-fit: cover; /* Cover the entire area */
+      z-index: 0; /* Set the video behind the container */
+    }
+
+    .container {
+      position: relative;
+      z-index: 1; /* Ensure the cake and other elements appear above the video */
+    }
+
+    .birthday-text {
+      margin-bottom: 50px;
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+      color: white; /* Set text color to white */
+      font-size: 40px; /* Adjust font size */
+      text-align: center; /* Center the text */
+    }
+
+    .cake {
+      width: 400px; /* Increased width */
+      height: 250px; /* Increased height */
+      background: linear-gradient(to top, #ffcc99 50%, #ff9966 50%);
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin: 0 auto; /* Center the cake */
+    }
+
+    .cream-top {
+      position: absolute;
+      width: 100%;
+      height: 40px; /* Increased height for more cream */
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      top: -30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .candles {
+      position: absolute;
+      top: -10px; /* Adjusted position for better placement */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-around;
+      width: 70%;
+    }
+
+    .candle {
+      width: 12px; /* Increased width */
+      height: 40px; /* Increased height */
+      background: #ffff66;
+      position: relative;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .candle::after {
+      content: '';
+      position: absolute;
+      width: 6px; /* Increased width for flame */
+      height: 12px; /* Increased height for flame */
+      background: #ffcc00;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      top: -12px; /* Adjusted position for flame */
+    }
+
+    .info-box {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 2; /* Ensure the info box is above other elements */
+    }
+
+    .info-box img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    #secondaryText {
+      color: palevioletred; /* Set secondary text color to white */
+    }
+
+    /* Music button styles */
+    .music-btn {
+      margin: 20px;
+      padding: 10px 20px;
+      background-color: #ff9966; /* Button color */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 2; /* Ensure the button is above other elements */
+    }
+
+    .music-btn:hover {
+      background-color: #ffcc99; /* Button hover color */
+    }
+  </style>
+</head>
+<body>
+  <video class="bg-video" autoplay loop muted>
+    <source src="falling.mp4" type="video/mp4"> <!-- Replace with your video file -->
+    Your browser does not support the video tag.
+  </video>
+  
+  <audio id="backgroundMusic" loop>
+    <source src="song.mp3" type="audio/mpeg">
+    Your browser does not support the audio tag.
+  </audio>
+  
+  <div class="container">
+    <div class="birthday-text">Happy Birthday Wifey!</div> <!-- Birthday text -->
+    
+    <div class="cake">
+      <div class="cream-top"></div>
+      <div class="candles">
+        <div class="candle" id="candle1"></div>
+        <div class="candle" id="candle2"></div>
+        <div class="candle" id="candle3"></div>
+      </div>
+    </div>
+
+    <div id="infoBox" class="info-box">
+      <span class="close-btn" onclick="closeInfo()">✖</span>
+      <img id="infoImage" src="" alt="Candle Info" />
+      <h2 id="mainText"></h2> <!-- Main text element -->
+      <p id="secondaryText"></p> <!-- Secondary text element -->
+    </div>
+
+    <button class="music-btn" onclick="playMusic()">Play Music</button>
+  </div>
+
+  <script>
+    // Function to display info box with image and text
+    function showInfo(imageSrc, mainText, secondaryText) {
+      const infoBox = document.getElementById('infoBox');
+      const infoImage = document.getElementById('infoImage');
+      const mainTextElement = document.getElementById('mainText');
+      const secondaryTextElement = document.getElementById('secondaryText');
+
+      infoImage.src = imageSrc;
+      mainTextElement.innerText = mainText;
+      secondaryTextElement.innerText = secondaryText;
+
+      // Show the info box
+      infoBox.style.display = 'block';
+    }
+
+    // Close info box
+    function closeInfo() {
+      const infoBox = document.getElementById('infoBox');
+      infoBox.style.display = 'none';
+    }
+
+    // Function to play music
+    function playMusic() {
+      const music = document.getElementById('backgroundMusic');
+      music.play(); // Play the music
+    }
+
+    // Add event listeners to candles
+    document.getElementById('candle1').addEventListener('click', () => {
+      showInfo('f1.jpg', 'Happy Birthday! 🎉 Here’s to more adventures together!', 'You light up my life in every way! ❤️');
+    });
+
+    document.getElementById('candle2').addEventListener('click', () => {
+      showInfo('f2.jpg', 'May your day be filled with love and joy! ❤️', 'Wishing you a day as wonderful as you are!');
+    });
+
+    document.getElementById('candle3').addEventListener('click', () => {
+      showInfo('f3.jpg', 'Wishing you all the happiness in the world! 🌟', 'Here’s to many more birthdays together! 🎂');
+    });
+  </script>
+</body>
+</html>
